@@ -73,6 +73,7 @@ app.post('/', (request,response) => {
     
 })
 
+// endpoint edit transaksi
 app.put('/:id_transaksi',async (request, response) => {
     // tampung data utk update ke tbl transaksi
     let dataTransaksi= {
@@ -124,6 +125,7 @@ app.put('/:id_transaksi',async (request, response) => {
 
 })
 
+// endpoint delete transaksi
 app.delete("/:id_transaksi", (request, response)=> {
     // tampung parameter id_transaksi
     let parameter = {
@@ -160,7 +162,7 @@ app.post("/status/:id_transaksi", (request, response) => {
         status: request.body.status
     }
 
-    // kita tampung parameter
+    // tampung parameter
     let parameter = {
         id_transaksi: request.params.id_transaksi
     }
@@ -175,6 +177,32 @@ app.post("/status/:id_transaksi", (request, response) => {
     .catch(error => {
         return response.json({
             message: error.message
+        })
+    })
+})
+
+//endpoint mengubah status pembayaran
+app.get("/bayar/:id_transaksi", (request, response) => {
+    let parameter = {
+        id_transaksi : request.params.id_transaksi
+    }
+
+    let data = {
+        // mendapatkan tanggal yang saat ini berjalan
+        tgl_bayar : new Date().toISOString().split("T")[0],
+        dibayar: true
+    }
+
+    // proses ubah transaksi
+    transaksi.update(data, {where: parameter})
+    .then (result => {
+        return response.json({
+            message: `Transaksi telah dibayar`
+        })
+    })
+    .catch(error => {
+        return response.json({
+            message : error.message
         })
     })
 })
